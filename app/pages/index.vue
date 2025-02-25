@@ -10,7 +10,7 @@ useHead({
     { name: 'robots', content: 'noindex,nofollow' },
     { property: 'og:title', content: t('title') },
     { property: 'og:description', content: t('description') },
-    { property: 'og:image', content: 'https://onlinealarmclock.cms.im/nuxt.png' },
+    { property: 'og:image', content: 'https://onlinealarmclock.cms.im/logo.png' },
     { property: 'og:image:width', content: '968' },
     { property: 'og:image:height', content: '504' },
     { property: 'og:url', content: 'https://onlinealarmclock.cms.im/' },

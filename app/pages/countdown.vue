@@ -11,7 +11,7 @@ useHead({
     { name: 'description', content: t('countdown_description') },
     { property: 'og:title', content: t('countdown_title') },
     { property: 'og:description', content: t('countdown_description') },
-    { property: 'og:image', content: 'https://onlinealarmclock.cms.im/nuxt.png' },
+    { property: 'og:image', content: 'https://onlinealarmclock.cms.im/logo.png' },
     { property: 'og:image:width', content: '968' },
     { property: 'og:image:height', content: '504' },
     { property: 'og:url', content: 'https://onlinealarmclock.cms.im/' },
