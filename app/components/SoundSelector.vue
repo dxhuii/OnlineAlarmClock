@@ -6,7 +6,7 @@ const { t } = useI18n()
 const selectedSound = defineModel<string>('selectedSound', { required: true })
 const isPlaying = ref(false) // 跟踪播放状态
 
-const sounds = [
+const sounds = computed(() => [
   { id: 1, name: t('bells'), file: '/sounds/bells.mp3' },
   { id: 2, name: t('birds'), file: '/sounds/birds.mp3' },
   { id: 3, name: t('childhood'), file: '/sounds/childhood.mp3' },
@@ -28,7 +28,7 @@ const sounds = [
   { id: 19, name: t('twinkle'), file: '/sounds/twinkle.mp3' },
   { id: 20, name: t('wind_chimes'), file: '/sounds/wind-chimes.mp3' },
   { id: 21, name: t('xylophone'), file: '/sounds/xylophone.mp3' },
-]
+])
 
 const previewAudio = ref<any>(null)
 

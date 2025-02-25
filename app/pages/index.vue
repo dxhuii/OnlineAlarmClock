@@ -7,7 +7,6 @@ useHead({
   title: t('title'),
   meta: [
     { name: 'description', content: t('description') },
-    { name: 'keywords', content: t('keywords') },
     { name: 'robots', content: 'noindex,nofollow' },
     { property: 'og:title', content: t('title') },
     { property: 'og:description', content: t('description') },
@@ -163,12 +162,10 @@ onUnmounted(() => {
 
 <template>
   <div class="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4 transition-colors dark:bg-gray-900">
+    <!-- 主要内容 -->
     <h1 class="mb-4 text-5xl text-gray-800 font-bold dark:text-white">
       {{ $t('title') }}
     </h1>
-    <div class="fixed right-5 top-5">
-      <DarkToggle />
-    </div>
 
     <!-- 当前时间和日期 -->
     <div class="mb-6 text-center">
@@ -244,7 +241,6 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <!-- 操作按钮 -->
     <!-- 操作按钮 -->
     <div class="mb-6">
       <button
@@ -342,12 +338,12 @@ onUnmounted(() => {
   100% {
     box-shadow:
       0 0 10px rgba(37, 99, 235, 0.3),
-      0 0 20px rgba(37, 99, 235, 0.2); /* 蓝色光晕 */
+      0 0 20px rgba(37, 99, 235, 0.2);
   }
   50% {
     box-shadow:
       0 0 20px rgba(37, 99, 235, 0.6),
-      0 0 30px rgba(37, 99, 235, 0.4); /* 增强光晕 */
+      0 0 30px rgba(37, 99, 235, 0.4);
   }
 }
 
@@ -362,12 +358,12 @@ onUnmounted(() => {
     100% {
       box-shadow:
         0 0 10px rgba(37, 99, 235, 0.3),
-        0 0 20px rgba(37, 99, 235, 0.2); /* 蓝色光晕 */
+        0 0 20px rgba(37, 99, 235, 0.2);
     }
     50% {
       box-shadow:
         0 0 20px rgba(37, 99, 235, 0.6),
-        0 0 30px rgba(37, 99, 235, 0.4); /* 增强光晕 */
+        0 0 30px rgba(37, 99, 235, 0.4);
     }
   }
 }

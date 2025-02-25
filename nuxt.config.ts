@@ -39,6 +39,7 @@ export default defineNuxtConfig({
 
   css: [
     '@unocss/reset/tailwind.css',
+    '@vuepic/vue-datepicker/dist/main.css', // DatePicker CSS
   ],
 
   colorMode: {
