@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     '@vite-pwa/nuxt',
     '@nuxt/eslint',
     '@nuxtjs/i18n',
+    'nuxt-umami',
   ],
 
   devtools: {
@@ -91,4 +92,10 @@ export default defineNuxtConfig({
   },
 
   pwa,
+
+  umami: {
+    id: '691ab4f0-9191-40bb-8b3c-da5d2ffb3ab1',
+    host: 'https://d.vv.chat',
+    autoTrack: true,
+  },
 })
