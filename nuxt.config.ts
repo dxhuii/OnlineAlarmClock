@@ -21,7 +21,9 @@ export default defineNuxtConfig({
       viewport: 'width=device-width,initial-scale=1',
       link: [
         { rel: 'icon', href: '/favicon.ico', sizes: 'any' },
-        { rel: 'icon', type: 'image/svg+xml', href: '/nuxt.svg' },
+        { rel: 'icon', type: 'image/png', href: '/logo.png' },
+        { rel: 'icon', type: 'image/png', sizes: '192x192', href: '/pwa-192x192.png' },
+        { rel: 'icon', type: 'image/png', sizes: '512x512', href: '/pwa-512x512.png' },
         { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
       ],
       meta: [
@@ -30,7 +32,6 @@ export default defineNuxtConfig({
         { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' },
         { name: 'theme-color', media: '(prefers-color-scheme: light)', content: 'white' },
         { name: 'theme-color', media: '(prefers-color-scheme: dark)', content: '#222222' },
-        { hid: 'description', name: 'description', content: 'A modern alarm clock web app' },
       ],
     },
   },

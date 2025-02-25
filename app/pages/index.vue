@@ -8,6 +8,7 @@ useHead({
   meta: [
     { name: 'description', content: t('description') },
     { name: 'keywords', content: t('keywords') },
+    { name: 'robots', content: 'noindex,nofollow' },
     { property: 'og:title', content: t('title') },
     { property: 'og:description', content: t('description') },
     { property: 'og:image', content: 'https://onlinealarmclock.cms.im/nuxt.png' },
@@ -25,7 +26,8 @@ const selectedHour = ref<string>('')
 const selectedMinute = ref<string>('')
 const timeLeft = ref<number>(0)
 const isRunning = ref(false)
-const soundFile = ref<string>('/alarm.mp3') // 默认第一个声音
+const soundFile = ref<string>('/sounds/bells.mp3') // 默认第一个声音
+const showAlarmPopup = ref(false) // 控制弹窗显示
 let timer: NodeJS.Timeout | null = null
 
 const alarmSound = computed(() => new Howl({
@@ -118,6 +120,7 @@ function startAlarm() {
     else {
       stopAlarm()
       alarmSound.value.play()
+      showAlarmPopup.value = true // 显示弹窗
     }
   }, 1000)
 }
@@ -128,6 +131,22 @@ function stopAlarm() {
     clearInterval(timer)
   isRunning.value = false
   alarmSound.value.stop()
+}
+
+// 切换闹钟状态（开始/停止）
+function toggleAlarm() {
+  if (isRunning.value) {
+    stopAlarm()
+  }
+  else {
+    startAlarm()
+  }
+}
+
+// 隐藏弹窗并停止声音
+function hideAlarmPopup() {
+  showAlarmPopup.value = false
+  alarmSound.value.stop() // 关闭弹窗时停止声音
 }
 
 // 切换语言
@@ -208,38 +227,59 @@ onUnmounted(() => {
     <SoundSelector v-model:selected-sound="soundFile" />
 
     <!-- 倒计时显示 -->
-    <div v-if="isRunning" class="mb-6 rounded-lg bg-white p-4 text-center shadow-lg dark:bg-gray-800">
-      <div class="mb-2 flex items-center justify-center gap-2">
-        <div class="i-mdi-alarm text-4xl text-gray-800 dark:text-white" /> <!-- 闹钟图标 -->
-        <span class="text-4xl text-gray-800 dark:text-white" style="font-family: 'clockicons', sans-serif;">
-          {{ alarmTime }}
-        </span>
-        <span class="text-xl text-gray-600 dark:text-gray-300">{{ locale === 'en' ? amPm : '' }}</span>
-      </div>
-      <div class="flex items-center justify-center gap-2">
-        <div class="i-mdi-clock-outline text-2xl text-gray-800 dark:text-white" /> <!-- 时钟图标 -->
-        <span class="text-2xl text-gray-800 dark:text-white" style="font-family: 'clockicons', sans-serif;">
+    <div v-if="isRunning" class="mb-6 text-center">
+      <div class="breathe-animation relative h-72 w-72 flex flex-col items-center justify-center rounded-full bg-white shadow-xl dark:bg-gray-800">
+        <div class="absolute left-4 top-4">
+          <div class="i-mdi-alarm text-2xl text-gray-800 dark:text-white" />
+        </div>
+        <div class="mb-2 text-xl text-gray-800 dark:text-white" style="font-family: 'clockicons', sans-serif;">
+          {{ alarmTime }} {{ locale === 'en' ? amPm : '' }}
+        </div>
+        <div class="absolute bottom-4 right-4">
+          <div class="i-mdi-clock-outline text-2xl text-gray-800 dark:text-white" />
+        </div>
+        <div class="text-3xl text-gray-800 dark:text-white" style="font-family: 'clockicons', sans-serif;">
           {{ formattedTimeLeft }}
-        </span>
+        </div>
       </div>
     </div>
 
     <!-- 操作按钮 -->
-    <div class="mb-6 flex gap-4">
+    <!-- 操作按钮 -->
+    <div class="mb-6">
       <button
-        :disabled="isRunning || !alarmTime"
+        :disabled="!alarmTime"
         class="rounded-full bg-blue-600 px-6 py-3 text-lg text-white transition-colors disabled:cursor-not-allowed dark:bg-blue-500 disabled:bg-gray-400 hover:bg-blue-700 dark:hover:bg-blue-600"
-        @click="startAlarm"
+        @click="toggleAlarm"
       >
-        {{ $t('start') }}
+        {{ isRunning ? $t('stop') : $t('start') }}
       </button>
-      <button
-        :disabled="!isRunning"
-        class="rounded-full bg-red-600 px-6 py-3 text-lg text-white transition-colors disabled:cursor-not-allowed dark:bg-red-500 disabled:bg-gray-400 hover:bg-red-700 dark:hover:bg-red-600"
-        @click="stopAlarm"
-      >
-        {{ $t('stop') }}
-      </button>
+    </div>
+
+    <!-- 如何使用在线闹钟文档 -->
+    <div class="mb-6 max-w-2xl">
+      <h2 class="mb-4 text-2xl text-gray-800 font-bold dark:text-white">
+        {{ $t('how_to_use_title') }}
+      </h2>
+      <div class="prose dark:prose-invert">
+        <p>{{ $t('how_to_use_intro') }}</p>
+        <h3 class="mb-2 mt-4 text-xl font-semibold">
+          {{ $t('setting_alarm') }}
+        </h3>
+        <p>{{ $t('setting_alarm_desc') }}</p>
+        <h3 class="mb-2 mt-4 text-xl font-semibold">
+          {{ $t('quick_times') }}
+        </h3>
+        <p>{{ $t('quick_times_desc') }}</p>
+        <h3 class="mb-2 mt-4 text-xl font-semibold">
+          {{ $t('sounds') }}
+        </h3>
+        <p>{{ $t('sounds_desc') }}</p>
+        <h3 class="mb-2 mt-4 text-xl font-semibold">
+          {{ $t('sharing') }}
+        </h3>
+        <p>{{ $t('sharing_desc') }}</p>
+      </div>
     </div>
 
     <!-- 社交分享组件（仅客户端） -->
@@ -262,5 +302,73 @@ onUnmounted(() => {
         ZH
       </button>
     </div>
+
+    <!-- 闹钟结束弹窗 -->
+    <div v-if="showAlarmPopup" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" @click.self="hideAlarmPopup">
+      <div class="relative max-w-md w-full rounded-lg bg-white p-6 shadow-xl dark:bg-gray-800">
+        <h2 class="mb-4 text-2xl text-gray-800 font-bold dark:text-white">
+          {{ $t('alarm_finished') }}
+        </h2>
+        <p class="mb-6 text-gray-700 dark:text-gray-300">
+          {{ $t('alarm_message') }}
+        </p>
+        <button class="absolute right-4 top-4 p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200" @click="hideAlarmPopup">
+          <div class="i-mdi-close h-6 w-6" />
+        </button>
+      </div>
+    </div>
   </div>
 </template>
+
+<style scoped>
+/* 弹窗淡入动画 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* 呼吸灯动画 */
+.breathe-animation {
+  animation: breathe 3s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    box-shadow:
+      0 0 10px rgba(37, 99, 235, 0.3),
+      0 0 20px rgba(37, 99, 235, 0.2); /* 蓝色光晕 */
+  }
+  50% {
+    box-shadow:
+      0 0 20px rgba(37, 99, 235, 0.6),
+      0 0 30px rgba(37, 99, 235, 0.4); /* 增强光晕 */
+  }
+}
+
+/* 暗黑模式下的呼吸灯动画 */
+@media (prefers-color-scheme: dark) {
+  .breathe-animation {
+    animation: breathe-dark 3s ease-in-out infinite;
+  }
+
+  @keyframes breathe-dark {
+    0%,
+    100% {
+      box-shadow:
+        0 0 10px rgba(37, 99, 235, 0.3),
+        0 0 20px rgba(37, 99, 235, 0.2); /* 蓝色光晕 */
+    }
+    50% {
+      box-shadow:
+        0 0 20px rgba(37, 99, 235, 0.6),
+        0 0 30px rgba(37, 99, 235, 0.4); /* 增强光晕 */
+    }
+  }
+}
+</style>

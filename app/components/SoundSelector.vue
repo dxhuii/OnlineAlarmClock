@@ -1,31 +1,68 @@
 <script setup lang="ts">
 import { Howl } from 'howler'
 
+const { t } = useI18n()
+
 const selectedSound = defineModel<string>('selectedSound', { required: true })
 const isPlaying = ref(false) // 跟踪播放状态
 
 const sounds = [
-  { id: 1, name: 'Classic Bell', file: '/alarm.mp3' },
-  { id: 2, name: 'Soft Chime', file: '/soft-chime.mp3' },
-  { id: 3, name: 'Morning Rooster', file: '/rooster.mp3' },
-  { id: 4, name: 'Electronic Beep', file: '/beep.mp3' },
+  { id: 1, name: t('bells'), file: '/sounds/bells.mp3' },
+  { id: 2, name: t('birds'), file: '/sounds/birds.mp3' },
+  { id: 3, name: t('childhood'), file: '/sounds/childhood.mp3' },
+  { id: 4, name: t('classic'), file: '/sounds/classic.mp3' },
+  { id: 5, name: t('cuckoo'), file: '/sounds/cuckoo.mp3' },
+  { id: 6, name: t('flute'), file: '/sounds/flute.mp3' },
+  { id: 7, name: t('glow'), file: '/sounds/glow.mp3' },
+  { id: 8, name: t('guitar'), file: '/sounds/guitar.mp3' },
+  { id: 9, name: t('happy'), file: '/sounds/happy.mp3' },
+  { id: 10, name: t('harp'), file: '/sounds/harp.mp3' },
+  { id: 11, name: t('music_box'), file: '/sounds/music-box.mp3' },
+  { id: 12, name: t('paradise_island'), file: '/sounds/paradise-island.mp3' },
+  { id: 13, name: t('piano'), file: '/sounds/piano.mp3' },
+  { id: 14, name: t('pipe'), file: '/sounds/pipe.mp3' },
+  { id: 15, name: t('pizzicato'), file: '/sounds/pizzicato.mp3' },
+  { id: 16, name: t('rooster'), file: '/sounds/rooster.mp3' },
+  { id: 17, name: t('savannah'), file: '/sounds/savannah.mp3' },
+  { id: 18, name: t('school'), file: '/sounds/school.mp3' },
+  { id: 19, name: t('twinkle'), file: '/sounds/twinkle.mp3' },
+  { id: 20, name: t('wind_chimes'), file: '/sounds/wind-chimes.mp3' },
+  { id: 21, name: t('xylophone'), file: '/sounds/xylophone.mp3' },
 ]
 
 const previewAudio = ref<any>(null)
 
 function previewSound() {
   if (previewAudio.value) {
-    previewAudio.value.stop()
-    isPlaying.value = false
+    // 如果正在播放，点击停止
+    if (isPlaying.value) {
+      previewAudio.value.stop()
+      isPlaying.value = false
+    }
+    else {
+      // 如果未播放，重新播放
+      previewAudio.value.stop()
+      previewAudio.value = new Howl({
+        src: [selectedSound.value],
+        loop: false,
+        onplay: () => { isPlaying.value = true },
+        onend: () => { isPlaying.value = false },
+        onstop: () => { isPlaying.value = false },
+      })
+      previewAudio.value.play()
+    }
   }
-  previewAudio.value = new Howl({
-    src: [selectedSound.value],
-    loop: false,
-    onplay: () => { isPlaying.value = true },
-    onend: () => { isPlaying.value = false },
-    onstop: () => { isPlaying.value = false },
-  })
-  previewAudio.value.play()
+  else {
+    // 初始播放
+    previewAudio.value = new Howl({
+      src: [selectedSound.value],
+      loop: false,
+      onplay: () => { isPlaying.value = true },
+      onend: () => { isPlaying.value = false },
+      onstop: () => { isPlaying.value = false },
+    })
+    previewAudio.value.play()
+  }
 }
 
 onUnmounted(() => {
