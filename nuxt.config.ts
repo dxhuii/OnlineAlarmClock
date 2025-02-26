@@ -84,7 +84,7 @@ export default defineNuxtConfig({
 
   // 国际化配置
   i18n: {
-    baseUrl: process.env.node_env === 'production' ? process.env.BASE_URL : 'http://localhost:3000',
+    baseUrl: process.env.BASE_URL || 'http://localhost:3000',
     locales: [
       { code: 'en', language: 'en-US', name: 'English', file: 'en.json' },
       { code: 'zh', language: 'zh-CN', name: '中文', file: 'zh.json' },
